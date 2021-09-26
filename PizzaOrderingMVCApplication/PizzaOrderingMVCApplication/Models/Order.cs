@@ -15,7 +15,7 @@ namespace PizzaOrderingMVCApplication.Models
         public int OrderId { get; set; }
         public string UserId { get; set; }
         public double? DeliveryCharges { get; set; }
-        public double? TotalBill { get; set; }
+        public int? TotalBill { get; set; }
         public int? Quatity { get; set; }
         public string OrderStatus { get; set; }
 
