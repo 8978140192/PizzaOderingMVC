@@ -298,3 +298,5 @@ C:\Users\Administrator\Desktop\PizzaOrdingMVCApplication\PizzaOrderingMVCApplica
 C:\Users\Administrator\Desktop\PizzaOrdingMVCApplication\PizzaOrderingMVCApplication\PizzaOrderingMVCApplication\obj\Debug\net5.0\PizzaOrderingMVCApplication.genruntimeconfig.cache
 C:\Users\Administrator\Desktop\PizzaOrdingMVCApplication\PizzaOrderingMVCApplication\PizzaOrderingMVCApplication\obj\Debug\net5.0\Razor\Views\UserLogin\PizzaView.cshtml.g.cs
 C:\Users\Administrator\Desktop\PizzaOrdingMVCApplication\PizzaOrderingMVCApplication\PizzaOrderingMVCApplication\obj\Debug\net5.0\Razor\Views\UserLogin\PizzaDetailsPage.cshtml.g.cs
+C:\Users\Administrator\Desktop\PizzaOrdingMVCApplication\PizzaOrderingMVCApplication\PizzaOrderingMVCApplication\obj\Debug\net5.0\Razor\Views\UserLogin\SummaryPage.cshtml.g.cs
+C:\Users\Administrator\Desktop\PizzaOrdingMVCApplication\PizzaOrderingMVCApplication\PizzaOrderingMVCApplication\obj\Debug\net5.0\Razor\Views\UserLogin\OrderSucessPage.cshtml.g.cs

@@ -55,17 +55,17 @@ namespace PizzaOrderingMVCApplication.Services
             else
                 return null;
         }
-        void InserIntoOrderTable(int button)
+        void InserIntoOrderTable(string status)
         {
-            if (CommanUsedValued.insertingCount==0)
+            if (CommanUsedValued.insertingCount==0 )
             {
                 CommanUsedValued.insertingCount++;
                 Order order = new Order();
                 order.UserId=CommanUsedValued.CurrentUsserId;
-                order.DeliveryCharges=CommanUsedValued.orderDeliveryCharges;
-                order.TotalBill=CommanUsedValued.orderTotalBill;
+                order.DeliveryCharges=0;
+                order.TotalBill=0;
                 order.Quatity=CommanUsedValued.orderQuatity;
-                order.OrderStatus="OnGoing";
+                order.OrderStatus=status;
                 _context.Orders.Add(order);
                 _context.SaveChanges();
                 CommanUsedValued.CurrentOrderId = order.OrderId;
@@ -77,6 +77,28 @@ namespace PizzaOrderingMVCApplication.Services
             //_context.OrderDetails.Add(orderDetail);
             //_context.SaveChanges();
             //int aa = orderDetail.ItemId;
+            //CustomerPizzaDetails customerPizzaDetails = new();
+            //customerPizzaDetails.pizzaCount = 1;
+            //customerPizzaDetails.pizzaId = button;
+            //customerPizzaDetails.onion = false;
+            //customerPizzaDetails.crispCapsicum = false;
+            //customerPizzaDetails.GrilledMushroom = false;
+            //customerPizzaDetails.qty = 1;
+            //CommanUsedValued.customerPizzaDetail.Add(customerPizzaDetails);
+            
+        }
+
+        public void InserIntoOrders(int button)
+        {
+            PizzaDetail details = _context.PizzaDetails.Where(x => x.PizzaId == button ).FirstOrDefault();
+            CommanUsedValued.pizzaIdOfCustomer.Add(button);
+            //CommanUsedValued.orderTotalBill = CommanUsedValued.orderTotalBill+(int) details.PizzaPrice;
+            //if (CommanUsedValued.orderTotalBill>250)
+            //{
+              //  CommanUsedValued.orderDeliveryCharges = 0;
+            //}
+            //CommanUsedValued.orderQuatity++;
+            //InserIntoOrderTable(button);
             CustomerPizzaDetails customerPizzaDetails = new();
             customerPizzaDetails.pizzaCount = 1;
             customerPizzaDetails.pizzaId = button;
@@ -85,46 +107,68 @@ namespace PizzaOrderingMVCApplication.Services
             customerPizzaDetails.GrilledMushroom = false;
             customerPizzaDetails.qty = 1;
             CommanUsedValued.customerPizzaDetail.Add(customerPizzaDetails);
-            
         }
 
-        public void InserIntoOrders(int button)
+        public void UpdateDatabase(List<CustomerPizzaDetails> customerPizzaDetails,string status)
         {
-            PizzaDetail details = _context.PizzaDetails.Where(x => x.PizzaId == button ).FirstOrDefault();
-            CommanUsedValued.pizzaIdOfCustomer.Add((int)button);
-            CommanUsedValued.orderTotalBill = CommanUsedValued.orderTotalBill+(int) details.PizzaPrice;
-            if (CommanUsedValued.orderTotalBill>250)
-            {
-                CommanUsedValued.orderDeliveryCharges = 0;
-            }
-            CommanUsedValued.orderQuatity++;
-            InserIntoOrderTable(button);
-        }
-
-        public void UpdateDatabase(List<CustomerPizzaDetails> customerPizzaDetails)
-        {
+            InserIntoOrderTable("SUCESS");//58
+            CommanUsedValued.orderTotalBill = 0;
             foreach (var item in customerPizzaDetails)
             {
                 for (int i = 0; i < item.qty; i++)
                 {
+                    PizzaDetail details = _context.PizzaDetails.Where(x => x.PizzaId == item.pizzaId).FirstOrDefault();
+                    CommanUsedValued.orderTotalBill += (int)details.PizzaPrice;
+
                     InserIntoOrderDetail(CommanUsedValued.CurrentOrderId, item.pizzaId);
                     if (item.onion==true)
                     {
+                        CommanUsedValued.orderTotalBill += 60;
                         InserIntoTopping(CommanUsedValued.CurrentOrderDetailId, 1);
                     }
                     if (item.crispCapsicum == true)
                     {
+                        CommanUsedValued.orderTotalBill += 60;
                         InserIntoTopping(CommanUsedValued.CurrentOrderDetailId, 2);
                     }
                     if(item.GrilledMushroom==true)
                     {
+                        CommanUsedValued.orderTotalBill += 60;
                         InserIntoTopping(CommanUsedValued.CurrentOrderDetailId, 3);
 
                     }
-                        
+                    
 
                 }
+                
+                CommanUsedValued.orderQuatity += item.qty;
+                
             }
+            UpdateOrderDatabase(CommanUsedValued.orderQuatity,CommanUsedValued.orderTotalBill,status);
+            customerPizzaDetails.Clear();
+            CommanUsedValued.insertingCount = 0;
+            CommanUsedValued.orderTotalBill = 0;
+            CommanUsedValued.orderQuatity = 0;
+            CommanUsedValued.pizzaIdOfCustomer.Clear();
+            CommanUsedValued.customerPizzaDetail.Clear();
+        }
+
+        private void UpdateOrderDatabase(int orderQty, int orderTotalBill,string status)
+        {
+            Order UpdatedOderder = _context.Orders.First(i => i.OrderId == CommanUsedValued.CurrentOrderId);
+            UpdatedOderder.TotalBill = orderTotalBill;
+            UpdatedOderder.Quatity = orderQty;
+            if (orderTotalBill>250)
+            {
+                UpdatedOderder.DeliveryCharges = 0;
+            }
+            else
+            {
+                UpdatedOderder.DeliveryCharges = 25;
+
+            }
+            UpdatedOderder.OrderStatus = status;
+            _context.SaveChanges();
         }
 
         private void InserIntoTopping(int currentOrderDetailId, int toppindId)
@@ -146,6 +190,15 @@ namespace PizzaOrderingMVCApplication.Services
             _context.OrderDetails.Add(orderDetail);
             _context.SaveChanges();//--------------------------------------------------------------------
             CommanUsedValued.CurrentOrderDetailId = orderDetail.ItemId;
+        }
+
+        public void UpdateNewDetails(List<CustomerPizzaDetails> customerPizzaDetails)
+        {
+            CommanUsedValued.customerPizzaDetail.Clear();
+            foreach (var item in customerPizzaDetails)
+            {
+                CommanUsedValued.customerPizzaDetail.Add(item);
+            }
         }
     }
 }

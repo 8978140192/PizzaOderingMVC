@@ -9,7 +9,7 @@
     <table id="tblCustomer">
         <thead>
             <tr>
-                <th>Count   </th>
+                
                 <th>PizzaName   </th>
                 <th>Toppings    </th>
                 <th>Qty</th>
@@ -20,7 +20,7 @@
             @for (int i = 0; i < Model.Count; i++)
             {
                 <tr>
-                    <td>@Model[i].pizzaCount</td>
+                    
                     <td>@Model[i].pizzaId</td>
                     <td>
                         onion @Html.CheckBoxFor(m => Model[i].onion)<br />

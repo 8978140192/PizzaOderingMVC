@@ -61,7 +61,7 @@ namespace PizzaOrderingMVCApplication.Controllers
            bool userAdd= _repo.AddUser(userDetail);
             if (userAdd == false)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("LoginPage", "UserLogin");
             }
             else
             {
@@ -82,15 +82,7 @@ namespace PizzaOrderingMVCApplication.Controllers
         }
         public IActionResult PizzaDetailsPage()
         {
-            //List<CustomerPizzaDetails> a = new();
-            //CustomerPizzaDetails b = new();
-            //b.pizzaCount = 1;
-            //b.pizzaId = 1;
-            //b.onion = false;
-            //b.crispCapsicum = true;
-            //b.GrilledMushroom = false;
-            //b.qty = 3;
-            //a.Add(b);
+            
             return View(CommanUsedValued.customerPizzaDetail);
         }
         [HttpPost]
@@ -107,15 +99,26 @@ namespace PizzaOrderingMVCApplication.Controllers
                     count++;
 
                 }
-                _repo.UpdateDatabase(customerPizzaDetails);
+                _repo.UpdateNewDetails(customerPizzaDetails);
+                //_repo.UpdateDatabase(customerPizzaDetails);
             }
             
-            return RedirectToAction("PizzaView", "UserLogin");
+            return RedirectToAction("SummaryPage", "UserLogin");
         }
 
         public IActionResult SummaryPage()
         {
-            return View();
+            return View(CommanUsedValued.customerPizzaDetail);
+        }
+        public IActionResult ConformOrder()
+        {
+            _repo.UpdateDatabase(CommanUsedValued.customerPizzaDetail,"SUCESS");
+            return RedirectToAction("OrderSucessPage", "UserLogin"); ;
+        }
+        public IActionResult CancleOrder()
+        {
+            _repo.UpdateDatabase(CommanUsedValued.customerPizzaDetail, "FAIL");
+            return RedirectToAction("PizzaView", "UserLogin"); ;
         }
         public IActionResult OrderSucessPage()
         {
