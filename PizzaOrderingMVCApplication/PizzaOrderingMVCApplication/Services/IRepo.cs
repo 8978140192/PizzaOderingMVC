@@ -15,6 +15,7 @@ namespace PizzaOrderingMVCApplication.Services
         public void UpdateDatabase(List<CustomerPizzaDetails> customerPizzaDetails, string status);
         public void UpdateNewDetails(List<CustomerPizzaDetails> customerPizzaDetails);
         public PizzaDetail GetPizzaDetailById(int id);
+        public List<int> PizzaOrderPriceDetails(List<CustomerPizzaDetails> customerPizzaDetails);
 
 
     }

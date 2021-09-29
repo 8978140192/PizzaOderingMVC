@@ -109,7 +109,7 @@ namespace PizzaOrderingMVCApplication.Controllers
 
         public IActionResult SummaryPage()
         {
-
+            ViewBag.prices=  _repo.PizzaOrderPriceDetails(CommanUsedValued.customerPizzaDetail);
             return View(CommanUsedValued.customerPizzaDetail);
         }
         public IActionResult ConformOrder()
@@ -124,6 +124,8 @@ namespace PizzaOrderingMVCApplication.Controllers
         }
         public IActionResult OrderSucessPage()
         {
+            ViewBag.orderId = CommanUsedValued.CurrentOrderId;
+            
             return View();
         }
     }

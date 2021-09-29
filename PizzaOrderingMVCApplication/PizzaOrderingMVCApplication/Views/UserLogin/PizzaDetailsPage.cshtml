@@ -28,7 +28,11 @@
                         crispCapsicum @Html.CheckBoxFor(m => Model[i].crispCapsicum)<br />
                         GrilledMushroom @Html.CheckBoxFor(m => Model[i].GrilledMushroom)
                     </td>
-                    <td>@Html.TextBoxFor(d => Model[i].qty)</td>
+
+                    
+                       
+                    <td>@Html.TextBoxFor(d => Model[i].qty, new { @type = "number", @min = "0" }
+                       )</td>
                 </tr>
 
             }

@@ -43,17 +43,48 @@ namespace PizzaOrderingMVCApplication.Services
 
         public UserDetail Autorize(string userId, string password)
         {
-            var userDetail = _context.UserDetails.Where(x => x.UserId == userId && x.Password == password).FirstOrDefault();
-            return userDetail;
+            try
+            {
+                var userDetail = _context.UserDetails.Where(x => x.UserId == userId && x.Password == password).FirstOrDefault();
+                return userDetail;
+            }
+            catch (ArgumentNullException argnulex)
+            {
+                Console.WriteLine(argnulex.Message);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+
+            
         }
 
         public ICollection<PizzaDetail> GetAllPizza()
         {
-            IList<PizzaDetail> pizzas = _context.PizzaDetails.ToList();
-            if (pizzas.Count > 0)
-                return pizzas;
-            else
-                return null;
+
+            try
+            {
+                IList<PizzaDetail> pizzas = _context.PizzaDetails.ToList();
+                if (pizzas.Count > 0)
+                    return pizzas;
+                else
+                    return null;
+            }
+            catch (ArgumentNullException argnulex)
+            {
+                Console.WriteLine(argnulex.Message);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+
+            
         }
         void InserIntoOrderTable(string status)
         {
@@ -208,6 +239,28 @@ namespace PizzaOrderingMVCApplication.Services
         {
             PizzaDetail details = _context.PizzaDetails.Where(x => x.PizzaId == id).FirstOrDefault();
             return details;
+        }
+
+        public List<int> PizzaOrderPriceDetails(List<CustomerPizzaDetails> customerPizzaDetails)
+        {
+            List<int> pizzaOrderPrices = new();
+            int pizzaPrice = 0;
+            int totalPrice = 0;
+            foreach (var item in customerPizzaDetails)
+            {
+                pizzaPrice = (int)item.pizzaDetail.PizzaPrice * item.qty;
+                if (item.onion == true)
+                    pizzaPrice += 60;
+                if (item.GrilledMushroom == true)
+                    pizzaPrice += 60;
+                if (item.crispCapsicum == true)
+                    pizzaPrice += 60;
+                pizzaOrderPrices.Add(pizzaPrice);
+                totalPrice += pizzaPrice;
+
+            }
+            pizzaOrderPrices.Add(totalPrice);
+            return pizzaOrderPrices;
         }
     }
 }
