@@ -102,20 +102,7 @@ namespace PizzaOrderingMVCApplication.Services
                 CommanUsedValued.CurrentOrderId = order.OrderId;
             }
 
-            // OrderDetail orderDetail = new();
-            //orderDetail.PizzaId = button;
-            //orderDetail.OrderId = CommanUsedValued.CurrentOrderId;
-            //_context.OrderDetails.Add(orderDetail);
-            //_context.SaveChanges();
-            //int aa = orderDetail.ItemId;
-            //CustomerPizzaDetails customerPizzaDetails = new();
-            //customerPizzaDetails.pizzaCount = 1;
-            //customerPizzaDetails.pizzaId = button;
-            //customerPizzaDetails.onion = false;
-            //customerPizzaDetails.crispCapsicum = false;
-            //customerPizzaDetails.GrilledMushroom = false;
-            //customerPizzaDetails.qty = 1;
-            //CommanUsedValued.customerPizzaDetail.Add(customerPizzaDetails);
+           
 
         }
 
@@ -125,15 +112,9 @@ namespace PizzaOrderingMVCApplication.Services
             CommanUsedValued.pizzaIdOfCustomer.Add(button);
 
             
-            //CommanUsedValued.orderTotalBill = CommanUsedValued.orderTotalBill+(int) details.PizzaPrice;
-            //if (CommanUsedValued.orderTotalBill>250)
-            //{
-            //  CommanUsedValued.orderDeliveryCharges = 0;
-            //}
-            //CommanUsedValued.orderQuatity++;
-            //InserIntoOrderTable(button);
+           
             CustomerPizzaDetails customerPizzaDetails = new();
-            //customerPizzaDetails.pizzaCount = 1;
+           
             customerPizzaDetails.pizzaDetail = GetPizzaDetailById(button);
             customerPizzaDetails.pizzaId = button;
             customerPizzaDetails.onion = false;
@@ -250,17 +231,23 @@ namespace PizzaOrderingMVCApplication.Services
             {
                 pizzaPrice = (int)item.pizzaDetail.PizzaPrice * item.qty;
                 if (item.onion == true)
-                    pizzaPrice += 60;
+                    pizzaPrice += 60 * item.qty;
                 if (item.GrilledMushroom == true)
-                    pizzaPrice += 60;
+                    pizzaPrice += 60 * item.qty;
                 if (item.crispCapsicum == true)
-                    pizzaPrice += 60;
+                    pizzaPrice += 60 * item.qty;
                 pizzaOrderPrices.Add(pizzaPrice);
                 totalPrice += pizzaPrice;
 
             }
             pizzaOrderPrices.Add(totalPrice);
             return pizzaOrderPrices;
+        }
+
+        public UserDetail GetUserDetailsById(string userId)
+        {
+            UserDetail userDetail = _context.UserDetails.Where(x => x.UserId == userId).FirstOrDefault();
+            return userDetail;
         }
     }
 }

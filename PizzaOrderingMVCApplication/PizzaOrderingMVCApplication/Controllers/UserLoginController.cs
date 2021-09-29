@@ -36,6 +36,7 @@ namespace PizzaOrderingMVCApplication.Controllers
                 if (_repo.Autorize(user.UserId, user.Password) != null)
                 {
                     CommanUsedValued.CurrentUsserId = user.UserId;
+                    CommanUsedValued.CurrentUsser = _repo.GetUserDetailsById(user.UserId);
 
                     return RedirectToAction("PizzaView", "UserLogin");
 
@@ -125,6 +126,7 @@ namespace PizzaOrderingMVCApplication.Controllers
         public IActionResult OrderSucessPage()
         {
             ViewBag.orderId = CommanUsedValued.CurrentOrderId;
+            ViewBag.userName = CommanUsedValued.CurrentUsser.UserName;
             
             return View();
         }

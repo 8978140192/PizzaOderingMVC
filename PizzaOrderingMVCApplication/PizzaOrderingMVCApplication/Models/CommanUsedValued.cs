@@ -8,6 +8,7 @@ namespace PizzaOrderingMVCApplication.Models
     public static class CommanUsedValued
     {
         public static string CurrentUsserId { get; set; }
+        public static UserDetail CurrentUsser { get; set; }
         public static int CurrentOrderId { get; set; }
         public static int CurrentOrderDetailId { get; set; }
         public static int orderTotalBill { get; set; }
