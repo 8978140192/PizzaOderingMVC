@@ -1,4 +1,6 @@
-﻿@model PizzaOrderingMVCApplication.Models.UserDetail
+﻿
+
+@model PizzaOrderingMVCApplication.Models.UserDetail
 
 @{
     Layout = null;
@@ -13,12 +15,29 @@
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <style>
-        nav {
-            background-color: red;
+        a {
+            color: white;
         }
 
+        nav {
+            background-color: dodgerblue;
+        }
+
+            nav > a {
+                color: black;
+            }
+
+                nav > a:hover {
+                    color: black;
+                    background-color: white;
+                }
+
         h4 {
-            text-align: center
+            text-align: center;
+            margin: 1rem;
+            color: lawngreen;
+            font-size: 2rem;
+            font-weight: bolder;
         }
 
         img {
@@ -55,15 +74,11 @@
     </style>
 </head>
 <body>
-    <nav class="navbar ">
-        <a class="navbar-brand" asp-action="Index">
-            <img src="/docs/4.0/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
-            Go Back to Home
-        </a>
-
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="btn btn-success"> <a asp-action="StartPage">Back to HomePage</a></button>
     </nav>
-    <img src="/images/Pizza_Refistration.png" class="embed-responsive" />
-    <h4>Welcome To The Pizza</h4>
+    <img src="/images/bgforlogin.jpg" />
+    <h4>Welcome To The Registration Page</h4>
 
 
     <div class="container d-flex justify-content-center">
@@ -71,17 +86,19 @@
             <div class="col-md-4">
                 @using (Html.BeginForm("RegisterPage", "UserLogin", FormMethod.Post))
                 {
-                    @ViewBag.message
+
+                    <div class="text-danger bg-light">@ViewBag.message</div>
+
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group">
                         <label asp-for="UserId" class="control-label">Enter your E-mail </label>
                         @Html.EditorFor(m => m.UserId)
-                        <span asp-validation-for="UserId" class="text-danger"></span>
+                        <span asp-validation-for="UserId" class="text-danger bg-light"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Password" class="control-label">Enter your Password </label>
                         @Html.EditorFor(m => m.Password)
-                        <span asp-validation-for="Password" class="text-danger"></span>
+                        <span asp-validation-for="Password" class="text-danger bg-light"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="UserName" class="control-label">Enter your Name  </label>
@@ -96,15 +113,15 @@
                     <div class="form-group">
                         <label asp-for="UserAge" class="control-label">Enter your Age </label>
                         @Html.EditorFor(m => m.UserAge)
-                        <span asp-validation-for="UserAge" class="text-danger"></span>
+                        <span asp-validation-for="UserAge" class="text-danger bg-light"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="UserAddress" class="control-label">Enter your Address </label>
                         @Html.EditorFor(m => m.UserAddress)
-                        <span asp-validation-for="UserAddress" class="text-danger"></span>
+                        <span asp-validation-for="UserAddress" class="text-danger bg-light"></span>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Create" class="btn btn-success" />
+                        <input type="submit" value="Create Account" class="btn btn-success" />
                     </div>
 
                 }
@@ -113,7 +130,13 @@
         </div>
     </div>
 
-
+    <br />   <br />  <br />
+    <footer>
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2021 Copyright:
+            <a class="text-reset fw-bold" href="#">Pizza Home</a>
+        </div>
+    </footer>
 
 
 </body>

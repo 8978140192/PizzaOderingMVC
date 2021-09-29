@@ -26,26 +26,26 @@ namespace PizzaOrderingMVCApplication.Controllers
         }
 
         [HttpPost]
-       
+
 
         public IActionResult LoginPage(UserDetail user)
         {
             if (ModelState.IsValid)
             {
-                
-                if (_repo.Autorize(user.UserId,user.Password) != null)
+
+                if (_repo.Autorize(user.UserId, user.Password) != null)
                 {
                     CommanUsedValued.CurrentUsserId = user.UserId;
 
                     return RedirectToAction("PizzaView", "UserLogin");
 
                 }
-               
+
 
             }
             return View();
         }
-       
+
         public IActionResult RegisterPage()
         {
             return View();
@@ -58,7 +58,7 @@ namespace PizzaOrderingMVCApplication.Controllers
         [HttpPost]
         public IActionResult RegisterPage(UserDetail userDetail)
         {
-           bool userAdd= _repo.AddUser(userDetail);
+            bool userAdd = _repo.AddUser(userDetail);
             if (userAdd == false)
             {
                 return RedirectToAction("LoginPage", "UserLogin");
@@ -82,7 +82,7 @@ namespace PizzaOrderingMVCApplication.Controllers
         }
         public IActionResult PizzaDetailsPage()
         {
-            
+
             return View(CommanUsedValued.customerPizzaDetail);
         }
         [HttpPost]
@@ -93,26 +93,28 @@ namespace PizzaOrderingMVCApplication.Controllers
                 int count = 0;
                 foreach (var item in customerPizzaDetails)
                 {
-                    
+
                     //item.pizzaCount;
-                    item.pizzaId=CommanUsedValued.pizzaIdOfCustomer[count];
+                    item.pizzaId = CommanUsedValued.pizzaIdOfCustomer[count];
+                    item.pizzaDetail = _repo.GetPizzaDetailById(CommanUsedValued.pizzaIdOfCustomer[count]);
                     count++;
 
                 }
                 _repo.UpdateNewDetails(customerPizzaDetails);
                 //_repo.UpdateDatabase(customerPizzaDetails);
             }
-            
+
             return RedirectToAction("SummaryPage", "UserLogin");
         }
 
         public IActionResult SummaryPage()
         {
+
             return View(CommanUsedValued.customerPizzaDetail);
         }
         public IActionResult ConformOrder()
         {
-            _repo.UpdateDatabase(CommanUsedValued.customerPizzaDetail,"SUCESS");
+            _repo.UpdateDatabase(CommanUsedValued.customerPizzaDetail, "SUCESS");
             return RedirectToAction("OrderSucessPage", "UserLogin"); ;
         }
         public IActionResult CancleOrder()

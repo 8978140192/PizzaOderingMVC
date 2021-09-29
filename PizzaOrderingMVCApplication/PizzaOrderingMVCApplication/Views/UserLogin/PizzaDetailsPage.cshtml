@@ -4,24 +4,25 @@
 }
 
 <h1>PizzaDetailsPage</h1>
-@using (Html.BeginForm("PizzaDetailsPage", "UserLogin", FormMethod.Post)) { 
+@using (Html.BeginForm("PizzaDetailsPage", "UserLogin", FormMethod.Post))
+{
     @Html.AntiForgeryToken()
     <table id="tblCustomer">
         <thead>
             <tr>
-                
+
                 <th>PizzaName   </th>
                 <th>Toppings    </th>
                 <th>Qty</th>
-                
+
             </tr>
         </thead>
         <tbody>
             @for (int i = 0; i < Model.Count; i++)
             {
                 <tr>
-                    
-                    <td>@Model[i].pizzaId</td>
+
+                    <td>@Model[i].pizzaDetail.PizzaName</td>
                     <td>
                         onion @Html.CheckBoxFor(m => Model[i].onion)<br />
                         crispCapsicum @Html.CheckBoxFor(m => Model[i].crispCapsicum)<br />
@@ -33,5 +34,5 @@
             }
         </tbody>
     </table>
-    <input class="btn btn-primary" type="submit" value="Oder Now"/>
+    <input class="btn btn-primary" type="submit" value="Oder Now" />
 }

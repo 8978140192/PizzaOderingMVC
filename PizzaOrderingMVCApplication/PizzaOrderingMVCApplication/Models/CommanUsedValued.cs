@@ -19,5 +19,6 @@ namespace PizzaOrderingMVCApplication.Models
 
         public static List<int> pizzaIdOfCustomer = new();
         public static List<CustomerPizzaDetails> customerPizzaDetail=new();
+        //public static List<int> EachPizzaOrderPrice = new();
     }
 }

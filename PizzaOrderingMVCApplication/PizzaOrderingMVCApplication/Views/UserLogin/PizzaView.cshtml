@@ -1,7 +1,5 @@
 ﻿@model IEnumerable<PizzaOrderingMVCApplication.Models.PizzaDetail>;
-@{
-    Layout = null;
-}
+
 
 <!DOCTYPE html>
 
@@ -11,9 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-
-    <!--<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />-->
-    <!-- <link rel="stylesheet" href="~/css/site.css" /> -->
+    @*<script src="https://code.jquery.com/jquery-3.6.0.js"></script>*@
 
     <title>Pizza</title>
     <style>
@@ -74,6 +70,9 @@
             <br />
             <div>
                 <div class="font-italic font-weight-bold fontPizza d-flex justify-content-center">Vegeterian Pizza</div>
+                <div class="d-flex justify-content-center">
+                    <a class="btn btn-success " asp-area="" asp-controller="UserLogin" asp-action="PizzaDetailsPage">CHECKOUT</a>
+                </div>
                 <div class="container">
                     <div class="row">
                         @{
@@ -91,26 +90,44 @@
                                             <li class="list-group-item">Type: <span class="font-weight-bold"> @Html.DisplayFor(modelItem => item.PizzaType)</span></li>
                                         </ul>
                                         <div class="card-body">
-                                            <button class="btn btn-primary" name="button" value=@Html.DisplayFor(modelItem => item.PizzaId) asp-action="check">Add to cart</button>
-
+                                            <div class="container m-0 p-0">
+                                                <a href="#" class="btn btn-primary pizzaItem" data-toggle="modal" data-target="#myModal@{@Html.DisplayFor(modelItem => item.PizzaId)}">Add to cart</a>
+                                                <div class="modal fade " id="myModal@{@Html.DisplayFor(modelItem => item.PizzaId)}">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header d-flex justify-content-between">
+                                                                <h3 class="modal-title">You choose</h3>
+                                                                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form id="myForm@{@Html.DisplayFor(modelItem => item.PizzaId)}">
+                                                                    <div class="">
+                                                                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.PizzaName)</h5>
+                                                                        <h5 class="list-group-item">Price: <span class="font-weight-bold"> @Html.DisplayFor(modelItem => item.PizzaPrice) INR</span> </h5>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                                                                <button class="btn btn-primary" name="button" id="btnSubmit1" value=@Html.DisplayFor(modelItem => item.PizzaId) asp-action="check">Add to cart</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
                             }
                         }
-
                     </div>
                 </div>
                 <div class="font-italic font-weight-bold fontPizza d-flex justify-content-center">Non Veg Pizza</div>
                 <div class="container">
                     <div class="row">
                         @{
-
-
                             foreach (var item in Model.Where(e => e.PizzaType == "NON-VEG"))
                             {
-
                                 <div class="col-4">
                                     <div class="card m-5" style="width: 25rem; height: 500px">
                                         <img src="@Html.DisplayFor(modelItem => item.PizzaImage)" class="card-img-top pizza-images" alt="@Html.DisplayFor(modelItem => item.PizzaName)">
@@ -123,29 +140,39 @@
                                             <li class="list-group-item">Type: <span class="font-weight-bold"> @Html.DisplayFor(modelItem => item.PizzaType)</span></li>
                                         </ul>
                                         <div class="card-body">
-                                            <button class="btn btn-primary" name="button" value=@Html.DisplayFor(modelItem => item.PizzaId) asp-action="check">Add to cart</button>
+                                            <div class="container m-0 p-0">
+                                                <a href="#" class="btn btn-primary pizzaItem" data-toggle="modal" data-target="#myModal@{@Html.DisplayFor(modelItem => item.PizzaId)}">Add to cart</a>
+                                                <div class="modal fade " id="myModal@{@Html.DisplayFor(modelItem => item.PizzaId)}">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header d-flex justify-content-between">
+                                                                <h3 class="modal-title">You choose</h3>
+                                                                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form id="myForm@{@Html.DisplayFor(modelItem => item.PizzaId)}">
+                                                                    <div class="">
+                                                                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.PizzaName)</h5>
+                                                                        <h5 class="list-group-item">Price: <span class="font-weight-bold"> @Html.DisplayFor(modelItem => item.PizzaPrice) INR</span> </h5>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                                                                <button class="btn btn-primary" name="button" id="btnSubmit1" value=@Html.DisplayFor(modelItem => item.PizzaId) asp-action="check">Add to cart</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
                             }
                         }
-
                     </div>
                 </div>
-
-
             </div>
     </form>
-    <div class="btn   btn-success">
-        
-        <a class="btn btn-primary" asp-area="" asp-controller="UserLogin" asp-action="PizzaDetailsPage">CHECKOUT</a>
-       
-
-    </div>
-    
-
-
-
 </body>
 </html>

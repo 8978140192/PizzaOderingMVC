@@ -39,9 +39,9 @@ namespace PizzaOrderingMVCApplication.Services
                 return true;
 
             }
-            }
+        }
 
-        public UserDetail Autorize(string userId,string password)
+        public UserDetail Autorize(string userId, string password)
         {
             var userDetail = _context.UserDetails.Where(x => x.UserId == userId && x.Password == password).FirstOrDefault();
             return userDetail;
@@ -57,15 +57,15 @@ namespace PizzaOrderingMVCApplication.Services
         }
         void InserIntoOrderTable(string status)
         {
-            if (CommanUsedValued.insertingCount==0 )
+            if (CommanUsedValued.insertingCount == 0)
             {
                 CommanUsedValued.insertingCount++;
                 Order order = new Order();
-                order.UserId=CommanUsedValued.CurrentUsserId;
-                order.DeliveryCharges=0;
-                order.TotalBill=0;
-                order.Quatity=CommanUsedValued.orderQuatity;
-                order.OrderStatus=status;
+                order.UserId = CommanUsedValued.CurrentUsserId;
+                order.DeliveryCharges = 0;
+                order.TotalBill = 0;
+                order.Quatity = CommanUsedValued.orderQuatity;
+                order.OrderStatus = status;
                 _context.Orders.Add(order);
                 _context.SaveChanges();
                 CommanUsedValued.CurrentOrderId = order.OrderId;
@@ -85,22 +85,25 @@ namespace PizzaOrderingMVCApplication.Services
             //customerPizzaDetails.GrilledMushroom = false;
             //customerPizzaDetails.qty = 1;
             //CommanUsedValued.customerPizzaDetail.Add(customerPizzaDetails);
-            
+
         }
 
         public void InserIntoOrders(int button)
         {
-            PizzaDetail details = _context.PizzaDetails.Where(x => x.PizzaId == button ).FirstOrDefault();
+            PizzaDetail details = _context.PizzaDetails.Where(x => x.PizzaId == button).FirstOrDefault();
             CommanUsedValued.pizzaIdOfCustomer.Add(button);
+
+            
             //CommanUsedValued.orderTotalBill = CommanUsedValued.orderTotalBill+(int) details.PizzaPrice;
             //if (CommanUsedValued.orderTotalBill>250)
             //{
-              //  CommanUsedValued.orderDeliveryCharges = 0;
+            //  CommanUsedValued.orderDeliveryCharges = 0;
             //}
             //CommanUsedValued.orderQuatity++;
             //InserIntoOrderTable(button);
             CustomerPizzaDetails customerPizzaDetails = new();
-            customerPizzaDetails.pizzaCount = 1;
+            //customerPizzaDetails.pizzaCount = 1;
+            customerPizzaDetails.pizzaDetail = GetPizzaDetailById(button);
             customerPizzaDetails.pizzaId = button;
             customerPizzaDetails.onion = false;
             customerPizzaDetails.crispCapsicum = false;
@@ -109,7 +112,7 @@ namespace PizzaOrderingMVCApplication.Services
             CommanUsedValued.customerPizzaDetail.Add(customerPizzaDetails);
         }
 
-        public void UpdateDatabase(List<CustomerPizzaDetails> customerPizzaDetails,string status)
+        public void UpdateDatabase(List<CustomerPizzaDetails> customerPizzaDetails, string status)
         {
             InserIntoOrderTable("SUCESS");//58
             CommanUsedValued.orderTotalBill = 0;
@@ -121,7 +124,7 @@ namespace PizzaOrderingMVCApplication.Services
                     CommanUsedValued.orderTotalBill += (int)details.PizzaPrice;
 
                     InserIntoOrderDetail(CommanUsedValued.CurrentOrderId, item.pizzaId);
-                    if (item.onion==true)
+                    if (item.onion == true)
                     {
                         CommanUsedValued.orderTotalBill += 60;
                         InserIntoTopping(CommanUsedValued.CurrentOrderDetailId, 1);
@@ -131,20 +134,20 @@ namespace PizzaOrderingMVCApplication.Services
                         CommanUsedValued.orderTotalBill += 60;
                         InserIntoTopping(CommanUsedValued.CurrentOrderDetailId, 2);
                     }
-                    if(item.GrilledMushroom==true)
+                    if (item.GrilledMushroom == true)
                     {
                         CommanUsedValued.orderTotalBill += 60;
                         InserIntoTopping(CommanUsedValued.CurrentOrderDetailId, 3);
 
                     }
-                    
+
 
                 }
-                
+
                 CommanUsedValued.orderQuatity += item.qty;
-                
+
             }
-            UpdateOrderDatabase(CommanUsedValued.orderQuatity,CommanUsedValued.orderTotalBill,status);
+            UpdateOrderDatabase(CommanUsedValued.orderQuatity, CommanUsedValued.orderTotalBill, status);
             customerPizzaDetails.Clear();
             CommanUsedValued.insertingCount = 0;
             CommanUsedValued.orderTotalBill = 0;
@@ -153,12 +156,12 @@ namespace PizzaOrderingMVCApplication.Services
             CommanUsedValued.customerPizzaDetail.Clear();
         }
 
-        private void UpdateOrderDatabase(int orderQty, int orderTotalBill,string status)
+        private void UpdateOrderDatabase(int orderQty, int orderTotalBill, string status)
         {
             Order UpdatedOderder = _context.Orders.First(i => i.OrderId == CommanUsedValued.CurrentOrderId);
             UpdatedOderder.TotalBill = orderTotalBill;
             UpdatedOderder.Quatity = orderQty;
-            if (orderTotalBill>250)
+            if (orderTotalBill > 250)
             {
                 UpdatedOderder.DeliveryCharges = 0;
             }
@@ -199,6 +202,12 @@ namespace PizzaOrderingMVCApplication.Services
             {
                 CommanUsedValued.customerPizzaDetail.Add(item);
             }
+        }
+
+        public PizzaDetail GetPizzaDetailById(int id)
+        {
+            PizzaDetail details = _context.PizzaDetails.Where(x => x.PizzaId == id).FirstOrDefault();
+            return details;
         }
     }
 }
