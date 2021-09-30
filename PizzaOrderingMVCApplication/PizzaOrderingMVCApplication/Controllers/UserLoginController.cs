@@ -52,10 +52,10 @@ namespace PizzaOrderingMVCApplication.Controllers
             return View();
         }
 
-        public IActionResult Create()
-        {
-            return View();
-        }
+       // public IActionResult Create()
+        //{
+          //  return View();
+        //}
         [HttpPost]
         public IActionResult RegisterPage(UserDetail userDetail)
         {
@@ -75,7 +75,7 @@ namespace PizzaOrderingMVCApplication.Controllers
         {
             return View(_repo.GetAllPizza());
         }
-        //[HttpPost]
+        
         public IActionResult check(int button)
         {
             _repo.InserIntoOrders(button);
@@ -83,7 +83,6 @@ namespace PizzaOrderingMVCApplication.Controllers
         }
         public IActionResult PizzaDetailsPage()
         {
-
             return View(CommanUsedValued.customerPizzaDetail);
         }
         [HttpPost]
@@ -94,20 +93,22 @@ namespace PizzaOrderingMVCApplication.Controllers
                 int count = 0;
                 foreach (var item in customerPizzaDetails)
                 {
-
-                    //item.pizzaCount;
                     item.pizzaId = CommanUsedValued.pizzaIdOfCustomer[count];
                     item.pizzaDetail = _repo.GetPizzaDetailById(CommanUsedValued.pizzaIdOfCustomer[count]);
                     count++;
-
                 }
                 _repo.UpdateNewDetails(customerPizzaDetails);
-                //_repo.UpdateDatabase(customerPizzaDetails);
             }
 
             return RedirectToAction("SummaryPage", "UserLogin");
         }
+        //public IActionResult CancelPizza(int position)
+        //{
+          //  CommanUsedValued.pizzaIdOfCustomer.RemoveAt(position);
+            //CommanUsedValued.customerPizzaDetail.RemoveAt(position);
+            //return RedirectToAction("PizzaDetailsPage", "UserLogin");
 
+        //}
         public IActionResult SummaryPage()
         {
             ViewBag.prices=  _repo.PizzaOrderPriceDetails(CommanUsedValued.customerPizzaDetail);
@@ -127,7 +128,6 @@ namespace PizzaOrderingMVCApplication.Controllers
         {
             ViewBag.orderId = CommanUsedValued.CurrentOrderId;
             ViewBag.userName = CommanUsedValued.CurrentUsser.UserName;
-            
             return View();
         }
     }

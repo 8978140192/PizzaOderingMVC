@@ -14,7 +14,11 @@ namespace PizzaOrderingMVCApplication.Services
         {
             _context = context;
         }
-
+        /// <summary>
+        /// This add new user into userDetails database
+        /// </summary>
+        /// <param name="userDetail"></param>
+        /// <returns>return false if user added otherwise true</returns>
         public bool AddUser(UserDetail userDetail)
         {
             try
@@ -40,7 +44,12 @@ namespace PizzaOrderingMVCApplication.Services
 
             }
         }
-
+        /// <summary>
+        /// Check autentication of user valid or not
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="password"></param>
+        /// <returns>userdetails if valid user otherwise null</returns>
         public UserDetail Autorize(string userId, string password)
         {
             try
@@ -51,16 +60,20 @@ namespace PizzaOrderingMVCApplication.Services
             catch (ArgumentNullException argnulex)
             {
                 Console.WriteLine(argnulex.Message);
-                throw;
+                return null;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                throw;
+                return null;
             }
 
             
         }
+        /// <summary>
+        /// Fetch all pizza details from database
+        /// </summary>
+        /// <returns>pizzaDetails</returns>
 
         public ICollection<PizzaDetail> GetAllPizza()
         {
@@ -76,16 +89,77 @@ namespace PizzaOrderingMVCApplication.Services
             catch (ArgumentNullException argnulex)
             {
                 Console.WriteLine(argnulex.Message);
-                throw;
+                return null;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                throw;
+                return null;
             }
 
             
         }
+        /// <summary>
+        /// Store user selected pizza details
+        /// </summary>
+        /// <param name="button"></param>
+        public void InserIntoOrders(int button)
+        {
+            PizzaDetail details = _context.PizzaDetails.Where(x => x.PizzaId == button).FirstOrDefault();
+            CommanUsedValued.pizzaIdOfCustomer.Add(button);
+
+            CustomerPizzaDetails customerPizzaDetails = new();
+
+            customerPizzaDetails.pizzaDetail = GetPizzaDetailById(button);
+            customerPizzaDetails.pizzaId = button;
+            customerPizzaDetails.onion = false;
+            customerPizzaDetails.crispCapsicum = false;
+            customerPizzaDetails.GrilledMushroom = false;
+            customerPizzaDetails.qty = 1;
+            CommanUsedValued.customerPizzaDetail.Add(customerPizzaDetails);
+        }
+        /// <summary>
+        /// Update the new pizza details.
+        /// </summary>
+        /// <param name="customerPizzaDetails"></param>
+        public void UpdateNewDetails(List<CustomerPizzaDetails> customerPizzaDetails)
+        {
+            CommanUsedValued.customerPizzaDetail.Clear();
+            foreach (var item in customerPizzaDetails)
+            {
+                CommanUsedValued.customerPizzaDetail.Add(item);
+            }
+        }
+        /// <summary>
+        /// Get price details of user ordered pizzas
+        /// </summary>
+        /// <param name="customerPizzaDetails"></param>
+        /// <returns></returns>
+        public List<int> PizzaOrderPriceDetails(List<CustomerPizzaDetails> customerPizzaDetails)
+        {
+            List<int> pizzaOrderPrices = new();
+            int pizzaPrice = 0;
+            int totalPrice = 0;
+            foreach (var item in customerPizzaDetails)
+            {
+                pizzaPrice = (int)item.pizzaDetail.PizzaPrice * item.qty;
+                if (item.onion == true)
+                    pizzaPrice += 60 * item.qty;
+                if (item.GrilledMushroom == true)
+                    pizzaPrice += 60 * item.qty;
+                if (item.crispCapsicum == true)
+                    pizzaPrice += 60 * item.qty;
+                pizzaOrderPrices.Add(pizzaPrice);
+                totalPrice += pizzaPrice;
+
+            }
+            pizzaOrderPrices.Add(totalPrice);
+            return pizzaOrderPrices;
+        }
+        /// <summary>
+        /// Insert data into orders table
+        /// </summary>
+        /// <param name="status"></param>
         void InserIntoOrderTable(string status)
         {
             if (CommanUsedValued.insertingCount == 0)
@@ -105,28 +179,15 @@ namespace PizzaOrderingMVCApplication.Services
            
 
         }
-
-        public void InserIntoOrders(int button)
-        {
-            PizzaDetail details = _context.PizzaDetails.Where(x => x.PizzaId == button).FirstOrDefault();
-            CommanUsedValued.pizzaIdOfCustomer.Add(button);
-
-            
-           
-            CustomerPizzaDetails customerPizzaDetails = new();
-           
-            customerPizzaDetails.pizzaDetail = GetPizzaDetailById(button);
-            customerPizzaDetails.pizzaId = button;
-            customerPizzaDetails.onion = false;
-            customerPizzaDetails.crispCapsicum = false;
-            customerPizzaDetails.GrilledMushroom = false;
-            customerPizzaDetails.qty = 1;
-            CommanUsedValued.customerPizzaDetail.Add(customerPizzaDetails);
-        }
-
+        /// <summary>
+        /// Insert data into orderdetails table and topping details
+        /// </summary>
+        /// <param name="customerPizzaDetails"></param>
+        /// <param name="status"></param>
+        
         public void UpdateDatabase(List<CustomerPizzaDetails> customerPizzaDetails, string status)
         {
-            InserIntoOrderTable("SUCESS");//58
+            InserIntoOrderTable(status);
             CommanUsedValued.orderTotalBill = 0;
             foreach (var item in customerPizzaDetails)
             {
@@ -168,6 +229,39 @@ namespace PizzaOrderingMVCApplication.Services
             CommanUsedValued.customerPizzaDetail.Clear();
         }
 
+        /// <summary>
+        /// Insert data into topping details
+        /// </summary>
+        /// <param name="currentOrderDetailId"></param>
+        /// <param name="toppindId"></param>
+
+        private void InserIntoTopping(int currentOrderDetailId, int toppindId)
+        {
+            OrderToppingDetail orderToppingDetail = new();
+            orderToppingDetail.ItemId = currentOrderDetailId;
+            orderToppingDetail.ToppingId = toppindId;
+            _context.OrderToppingDetails.Add(orderToppingDetail);
+            _context.SaveChanges();
+
+
+        }
+        /// <summary>
+        /// Insert data into order details tables
+        /// </summary>
+        /// <param name="currentOrderId"></param>
+        /// <param name="pizzaId"></param>
+        private void InserIntoOrderDetail(int currentOrderId, int pizzaId)
+        {
+            OrderDetail orderDetail = new();
+            orderDetail.PizzaId = pizzaId;
+            orderDetail.OrderId = currentOrderId;
+            _context.OrderDetails.Add(orderDetail);
+            _context.SaveChanges();
+            CommanUsedValued.CurrentOrderDetailId = orderDetail.ItemId;
+        }
+
+
+
         private void UpdateOrderDatabase(int orderQty, int orderTotalBill, string status)
         {
             Order UpdatedOderder = _context.Orders.First(i => i.OrderId == CommanUsedValued.CurrentOrderId);
@@ -185,65 +279,22 @@ namespace PizzaOrderingMVCApplication.Services
             UpdatedOderder.OrderStatus = status;
             _context.SaveChanges();
         }
-
-        private void InserIntoTopping(int currentOrderDetailId, int toppindId)
-        {
-            OrderToppingDetail orderToppingDetail = new();
-            orderToppingDetail.ItemId = currentOrderDetailId;
-            orderToppingDetail.ToppingId = toppindId;
-            _context.OrderToppingDetails.Add(orderToppingDetail);
-            _context.SaveChanges();
-
-
-        }
-
-        private void InserIntoOrderDetail(int currentOrderId, int pizzaId)
-        {
-            OrderDetail orderDetail = new();
-            orderDetail.PizzaId = pizzaId;
-            orderDetail.OrderId = currentOrderId;
-            _context.OrderDetails.Add(orderDetail);
-            _context.SaveChanges();//--------------------------------------------------------------------
-            CommanUsedValued.CurrentOrderDetailId = orderDetail.ItemId;
-        }
-
-        public void UpdateNewDetails(List<CustomerPizzaDetails> customerPizzaDetails)
-        {
-            CommanUsedValued.customerPizzaDetail.Clear();
-            foreach (var item in customerPizzaDetails)
-            {
-                CommanUsedValued.customerPizzaDetail.Add(item);
-            }
-        }
+        /// <summary>
+        /// Fetch pizza details by pizza id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
 
         public PizzaDetail GetPizzaDetailById(int id)
         {
             PizzaDetail details = _context.PizzaDetails.Where(x => x.PizzaId == id).FirstOrDefault();
             return details;
         }
-
-        public List<int> PizzaOrderPriceDetails(List<CustomerPizzaDetails> customerPizzaDetails)
-        {
-            List<int> pizzaOrderPrices = new();
-            int pizzaPrice = 0;
-            int totalPrice = 0;
-            foreach (var item in customerPizzaDetails)
-            {
-                pizzaPrice = (int)item.pizzaDetail.PizzaPrice * item.qty;
-                if (item.onion == true)
-                    pizzaPrice += 60 * item.qty;
-                if (item.GrilledMushroom == true)
-                    pizzaPrice += 60 * item.qty;
-                if (item.crispCapsicum == true)
-                    pizzaPrice += 60 * item.qty;
-                pizzaOrderPrices.Add(pizzaPrice);
-                totalPrice += pizzaPrice;
-
-            }
-            pizzaOrderPrices.Add(totalPrice);
-            return pizzaOrderPrices;
-        }
-
+        /// <summary>
+        /// Fetch user details by user id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public UserDetail GetUserDetailsById(string userId)
         {
             UserDetail userDetail = _context.UserDetails.Where(x => x.UserId == userId).FirstOrDefault();

@@ -27,7 +27,7 @@
                     <div class="card m-5" style="width: 20rem; ">
                         <img src="@Model[i].pizzaDetail.PizzaImage" class="card-img-top pizza-images" alt="@Model[i].pizzaDetail.PizzaName)">
                         <div class="card-body">
-                            <h5 class="card-title">@Model[i].pizzaDetail.PizzaName)</h5>
+                            <h5 class="card-title">@Model[i].pizzaDetail.PizzaName</h5>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">Price: <span class="font-weight-bold"> @Model[i].pizzaDetail.PizzaPrice INR</span> </li>
                                 <li class="list-group-item d-flex justify-content-between">
@@ -39,6 +39,8 @@
                                 <li class="list-group-item ">@Html.CheckBoxFor(m => Model[i].crispCapsicum) <span class="font-weight-bold"> crispCapsicum</span></li>
                                 <li class="list-group-item ">@Html.CheckBoxFor(m => Model[i].GrilledMushroom) <span class="font-weight-bold"> GrilledMushroom </span></li>
                             </ul>
+                           
+
                         </div>
                     </div>
                 </div>
